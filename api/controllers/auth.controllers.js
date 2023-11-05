@@ -11,16 +11,7 @@ export const signup = async(req, res, next) => {
             password: passwordHash,
             username,
         })
-        const userSaved = await newUser.save();
-        const token = await createdAccessToken({ id: userSaved._id });
-        res.cookie('token', token)
-        res.json({
-            id: userSaved._id,
-            email: userSaved.email,
-            username: userSaved.username,
-            createdAt: userSaved.createdAt,
-            updateAt: userSaved.updateAt,
-        });
+       await newUser.save();
         res.status(201).json('User saved successfully')
     } catch (error) {
         next(error);

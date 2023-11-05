@@ -21,8 +21,10 @@ export const signup = async(req, res, next) => {
             createdAt: userSaved.createdAt,
             updateAt: userSaved.updateAt,
         });
+        res.status(201).json('User saved successfully')
     } catch (error) {
-        res.status(500).json({message: error.message})
+        next(error);
+        
         
     }
 };

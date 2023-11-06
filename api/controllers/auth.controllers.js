@@ -21,24 +21,22 @@ export const signup = async(req, res, next) => {
 };
 
 
-
-export const signin = async(req, res) => {
+export const signin = async (req, res, next ) => {
     const { email, password } = req.body;
 
     try {
+        const UserFound = await User.findOne({ email });
 
-        const  UserFound = await User.findOne({ email })
-
-        if (!UserFound) return   res.status(404).json({message: 'User not found'})
+        if (!UserFound) return res.status(404).json({ message: 'User not found' });
 
         const isMatch = await bcrypt.compare(password, UserFound.password);
-        if (!isMatch) res.status(404).json({message: 'unauthorized'})
-            
-     
-        const token = await createdAccessToken({ id: UserFound._id });
-        const { password: pass, ...rest } = UserFound._doc
-        res.cookie('token', token, {httpOnly: true}).status(200).json(rest);
-       /* res.json({
+        if (!isMatch) return res.status(401).json({ message: 'Unauthorized' });
+
+        const token = jws.sign({ id: UserFound._id });
+        const { password: pass, ...rest } = UserFound._doc;
+
+        res.cookie('token', token, { httpOnly: true }).status(200).json(rest);
+          /* res.json({
             id: UserFound._id,
             email: UserFound.email,
             username: UserFound.username,
@@ -46,11 +44,9 @@ export const signin = async(req, res) => {
             updateAt: UserFound.updateAt,
         });*/
     } catch (error) {
-        res.status(500).json({message: error.message})
-        
+        return res.status(500).json({ message: error.message });
     }
 };
-
 
 
 

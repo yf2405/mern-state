@@ -2,7 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import routerApi from "./routes/index.js" 
-
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO)
@@ -14,6 +14,8 @@ mongoose.connect(process.env.MONGO)
 })
 const app = express()
 app.use(express.json());
+ 
+app.use(cookieParser());
 routerApi(app);
 
 app.listen(3000, () =>{

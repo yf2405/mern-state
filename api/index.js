@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import routerApi from "./routes/index.js" 
 import cookieParser from 'cookie-parser';
+import path from 'path';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO)
@@ -11,7 +12,10 @@ mongoose.connect(process.env.MONGO)
 }) 
 .catch((err)=>{
     console.log('Error connecting' + err);
-})
+});
+
+const __dirname = path.resolve();
+
 const app = express()
 app.use(express.json());
  
@@ -23,7 +27,11 @@ app.listen(3000, () =>{
 }
 );
 
+app.use(express.static(path.join(__dirname,  '/client/dist',)));
 
+app.get('*', (req, res) =>{
+    res.sendFile(path.join(__dirname, '/client', 'dist', 'index.html'));
+})
 app.get('/', (req, res) =>{
     res.send('Welcome');
 })

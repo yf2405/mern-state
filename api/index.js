@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 dotenv.config();
 
+mongoose.set('strictQuery', false);
+
 mongoose.connect(process.env.MONGO)
 .then(() =>{
     console.log('Connect to MongoDB!');

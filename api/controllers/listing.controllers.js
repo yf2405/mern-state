@@ -21,6 +21,9 @@ export const deleteListing = async (req, res, next) => {
     if (req.user.id !== listing.userRef) {
       return next(errorHandler(401, 'You can only delete your own listings!'));
     }
+    if(!listing.userRef){
+      return next(errorHandler(404, 'dont autenticate'));
+    }
   
     try {
       await Listing.findByIdAndDelete(req.params.id);
